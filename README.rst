@@ -2,11 +2,11 @@
 Cliquet Pusher
 ===============================
 
-.. image:: https://img.shields.io/travis/leplatrem/cliquet_pusher.svg
-        :target: https://travis-ci.org/leplatrem/cliquet_pusher
+.. image:: https://img.shields.io/travis/leplatrem/cliquet-pusher.svg
+        :target: https://travis-ci.org/leplatrem/cliquet-pusher
 
-.. image:: https://img.shields.io/pypi/v/cliquet_pusher.svg
-        :target: https://pypi.python.org/pypi/cliquet_pusher
+.. image:: https://img.shields.io/pypi/v/cliquet-pusher.svg
+        :target: https://pypi.python.org/pypi/cliquet-pusher
 
 **proof-of-concept**: Plug `Cliquet notifications <http://cliquet.readthedocs.org/en/latest/reference/notifications.html>`_
 with `Pusher.com <http://pusher.com>`_.
