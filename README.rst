@@ -17,7 +17,7 @@ Install
 
 ::
 
-    pip install cliquet_pusher
+    pip install cliquet-pusher
 
 
 Setup

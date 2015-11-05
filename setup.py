@@ -23,13 +23,13 @@ test_requirements = [
 ]
 
 setup(
-    name='cliquet_pusher',
+    name='cliquet-pusher',
     version='0.2.0.dev0',
     description="Plug Cliquet notifications with Pusher.com",
     long_description=readme + '\n\n' + history,
     author="Mathieu Leplatre",
     author_email='mathieu@leplat.re',
-    url='https://github.com/leplatrem/cliquet_pusher',
+    url='https://github.com/leplatrem/cliquet-pusher',
     packages=[
         'cliquet_pusher',
     ],
