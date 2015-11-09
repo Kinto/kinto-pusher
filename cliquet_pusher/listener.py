@@ -1,6 +1,7 @@
 import re
 
 from pyramid.settings import aslist
+from pyramid.exceptions import ConfigurationError
 from cliquet.listeners import ListenerBase
 
 
@@ -25,6 +26,11 @@ class Listener(ListenerBase):
 
 def load_from_config(config):
     settings = config.get_settings()
+
+    if not hasattr(config.registry, 'pusher'):
+        error_msg = ("'cliquet_pusher' seems to be missing from "
+                     "%s.includes" % settings['project_name'])
+        raise ConfigurationError(error_msg)
 
     channel = settings['event_listeners.pusher.channel']
     resources = aslist(settings['event_listeners.pusher.resources'])
