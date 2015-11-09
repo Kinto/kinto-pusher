@@ -20,8 +20,10 @@ class Listener(ListenerBase):
         channel = re.sub('[^a-zA-Z0-9_\\-]', '', channel)
         action = event.payload['action']
 
+        payload = event.impacted_records
+
         pusher = event.request.registry.pusher
-        pusher.trigger(channel, action, event.payload)
+        pusher.trigger(channel, action, payload)
 
 
 def load_from_config(config):
