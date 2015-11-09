@@ -44,7 +44,9 @@ record updates per collection:
 ::
 
     kinto.event_listeners.pusher.resources = record
-    kinto.event_listeners.pusher.channel = {bucket_id}-{collection_id}
+    kinto.event_listeners.pusher.channel = {bucket_id}-{collection_id}-{resource_name}
+
+> **Note:** *This channel format is the one used in the demo*
 
 
 TODO

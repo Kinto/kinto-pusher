@@ -1,0 +1,144 @@
+function main() {
+  // Mozilla demo server (flushed every day)
+  var server = "http://localhost:8888/v1";
+  // Simplest credentials ever.
+  var headers = {Authorization: "Basic " + btoa("public:notsecret")};
+  // Arbitrary collection id.
+  var collection_id = "kinto_demo_leaflet";
+
+  // Pusher credentials
+  var pusher_key = '<Pusher key>';
+
+  // Kinto client with sync options.
+  var kinto = new Kinto({remote: server, headers: headers});
+
+  // Local store in IndexedDB.
+  var store = kinto.collection(collection_id);
+
+  // Initialize map centered on my hometown.
+  var map = L.map('map', {
+    doubleClickZoom: false,
+    layers: [L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png')],
+    center: [48.49, 1.395],
+    zoom: 16
+  });
+
+  // Group of markers.
+  var markers = {};
+
+  // Load previously created records.
+  store.list()
+    .then(function(results) {
+      // Add each marker to map.
+      results.data.map(addMarker);
+    })
+    .then(syncServer);
+
+  // Create marker on double-click.
+  map.on('dblclick', function(event) {
+    // Save in local store.
+    store.create({latlng: event.latlng})
+      .then(function (result) {
+        // Add marker to map.
+        addMarker(result.data);
+      })
+      .then(syncServer);
+  });
+
+  setupLiveSync();
+
+  function setupLiveSync() {
+    var pusher = new Pusher(pusher_key, {
+      encrypted: true
+    });
+    fetch(server + '/buckets/default', {headers: headers})
+      .then(function (result) {
+        return result.json().data.id;
+      })
+      .then(function (bucket_id) {
+        // The channel name. It should match the setting
+        // `kinto.event_listeners.pusher.channel`
+        var channelName = bucket_id + '-' + collection_id + '-record';
+
+        var channel = pusher.subscribe(channelName);
+        channel.bind('create', function(data) {
+          data.map(function (change) {
+            if (markers[change.new.id])
+              return; // Ignore our own events.
+
+            // Store as if it was synced, and add to map.
+            store.create(change.new, {synced: true})
+              .then(addMarker.bind(undefined, change.new));
+          });
+        });
+        channel.bind('update', function(data) {
+          data.map(function (change) {
+            // Store as if it was synced, and update map.
+            store.update(change.new, {synced: true})
+              .then(function (result) {
+                markers[result.data.id].setLatLng(change.new.latlng);
+              });
+          });
+        });
+        channel.bind('delete', function(data) {
+          data.map(function (change) {
+            if (!markers[change.new.id])
+              return; // Ignore our own events.
+
+            // Delete completely from local DB, and remove from map.
+            store.delete(change.old.id, {virtual: false})
+              .then(removeMarker.bind(undefined, change.old));
+          });
+        });
+      });
+  }
+
+  function addMarker(record) {
+    // Create new marker.
+    var marker = L.marker(record.latlng, {draggable: true})
+                  .addTo(map);
+    // Store reference by record id.
+    markers[record.id] = marker;
+
+    // Listen to events on marker.
+    marker.on('click', function () {
+      store.delete(record.id)
+        .then(removeMarker.bind(undefined, record))
+        .then(syncServer);
+    });
+    marker.on('dragend', function () {
+      record.latlng = marker.getLatLng();
+      store.update(record)
+        .then(syncServer);
+    });
+  }
+
+  function removeMarker(record) {
+    map.removeLayer(markers[record.id]);
+    delete markers[record.id];
+  }
+
+  function syncServer() {
+    var options = {strategy: Kinto.syncStrategy.CLIENT_WINS};
+    store.sync(options)
+      .then(function (result) {
+        if (result.ok) {
+          // Add markers for newly created records.
+          result.created.map(addMarker);
+          // Remove markers of deleted records.
+          result.deleted.map(removeMarker);
+        }
+      })
+      .catch(function (err) {
+        // Special treatment since the demo server is flushed.
+        if (/flushed/.test(err.message)) {
+          // Mark every local record as «new» and re-upload.
+          return store.resetSyncStatus()
+            .then(syncServer);
+        }
+        throw err;
+      });
+  }
+}
+
+window.addEventListener("DOMContentLoaded", main);
