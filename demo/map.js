@@ -3,14 +3,16 @@ function main() {
   var server = "http://localhost:8888/v1";
   // Simplest credentials ever.
   var headers = {Authorization: "Basic " + btoa("public:notsecret")};
+  // Default bucket.
+  var bucket = "default";
   // Arbitrary collection id.
   var collection_id = "kinto_demo_leaflet";
 
   // Pusher credentials
-  var pusher_key = '<Pusher key>';
+  var pusher_key = '01a9feaaf9ebb120d1a6';
 
   // Kinto client with sync options.
-  var kinto = new Kinto({remote: server, headers: headers});
+  var kinto = new Kinto({bucket: bucket, remote: server, headers: headers});
 
   // Local store in IndexedDB.
   var store = kinto.collection(collection_id);
@@ -45,53 +47,10 @@ function main() {
       .then(syncServer);
   });
 
-  setupLiveSync();
+  // Setup live-sync!
+  getBucketId()
+   .then(setupLiveSync);
 
-  function setupLiveSync() {
-    var pusher = new Pusher(pusher_key, {
-      encrypted: true
-    });
-    fetch(server + '/buckets/default', {headers: headers})
-      .then(function (result) {
-        return result.json().data.id;
-      })
-      .then(function (bucket_id) {
-        // The channel name. It should match the setting
-        // `kinto.event_listeners.pusher.channel`
-        var channelName = bucket_id + '-' + collection_id + '-record';
-
-        var channel = pusher.subscribe(channelName);
-        channel.bind('create', function(data) {
-          data.map(function (change) {
-            if (markers[change.new.id])
-              return; // Ignore our own events.
-
-            // Store as if it was synced, and add to map.
-            store.create(change.new, {synced: true})
-              .then(addMarker.bind(undefined, change.new));
-          });
-        });
-        channel.bind('update', function(data) {
-          data.map(function (change) {
-            // Store as if it was synced, and update map.
-            store.update(change.new, {synced: true})
-              .then(function (result) {
-                markers[result.data.id].setLatLng(change.new.latlng);
-              });
-          });
-        });
-        channel.bind('delete', function(data) {
-          data.map(function (change) {
-            if (!markers[change.new.id])
-              return; // Ignore our own events.
-
-            // Delete completely from local DB, and remove from map.
-            store.delete(change.old.id, {virtual: false})
-              .then(removeMarker.bind(undefined, change.old));
-          });
-        });
-      });
-  }
 
   function addMarker(record) {
     // Create new marker.
@@ -138,6 +97,75 @@ function main() {
         }
         throw err;
       });
+  }
+
+  function getBucketId() {
+    // When using the `default` bucket, we should resolve its real id
+    // to be able to listen to notifications.
+    if (bucket != "default")
+      return Promise.resolve(bucket);
+
+    return fetch(server + '/buckets/' + bucket, {headers: headers})
+      .then(function (result) {
+        return result.json();
+      })
+      .then(function (result) {
+        return result.data.id;
+      });
+  }
+
+
+  function setupLiveSync(bucket_id) {
+    var pusher = new Pusher(pusher_key, {
+      encrypted: true
+    });
+
+    // The channel name. It should match the setting
+    // `kinto.event_listeners.pusher.channel`
+    var channelName = bucket_id + '-' + collection_id + '-record';
+
+    var channel = pusher.subscribe(channelName);
+    channel.bind('create', function(data) {
+      data.map(function (change) {
+        if (markers[change.new.id])
+          return; // Ignore our own events.
+
+        // Store as if it was synced, and add to map.
+        store.create(change.new, {synced: true})
+          .then(addMarker.bind(undefined, change.new));
+      });
+    });
+    channel.bind('update', function(data) {
+      data.map(function (change) {
+        // If local modification exists, ignore remote modification.
+        store.get(change.old.id)
+         .then(function (existing) {
+           if (existing.data._status != 'synced')
+             return;
+           // Store locally as if it was synced.
+           store.update(change.new, {synced: true})
+             .then(function (result) {
+                markers[result.data.id].setLatLng(change.new.latlng);
+             });
+         });
+      });
+    });
+    channel.bind('delete', function(data) {
+      data.map(function (change) {
+        if (!markers[change.old.id])
+          return; // Ignore our own events.
+
+        // If local modification exists, ignore remote deletion.
+        store.get(change.old.id)
+         .then(function (existing) {
+           if (existing.data._status != 'synced')
+             return;
+           // Delete completely from local DB.
+           store.delete(change.old.id, {virtual: false})
+             .then(removeMarker.bind(undefined, change.old));
+         });
+      });
+    });
   }
 }
 
