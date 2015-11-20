@@ -1,6 +1,6 @@
 function main() {
   // Mozilla demo server (flushed every day)
-  var server = "http://localhost:8888/v1";
+  var server = "https://kinto.dev.mozaws.net/v1";
   // Simplest credentials ever.
   var headers = {Authorization: "Basic " + btoa("public:notsecret")};
   // Default bucket.
