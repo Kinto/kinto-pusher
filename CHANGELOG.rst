@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.2.0 (unreleased)
+0.2.0 (2015-11-20)
 ------------------
 
 - Add HTML demo with *Kinto* and *Leaflet*
