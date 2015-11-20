@@ -15,6 +15,7 @@ with open('CHANGELOG.rst') as history_file:
     history = history_file.read()
 
 requirements = [
+    'cliquet>=2.11',
     'pusher'
 ]
 
@@ -51,6 +52,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
     ],
     test_suite='tests',
     tests_require=test_requirements

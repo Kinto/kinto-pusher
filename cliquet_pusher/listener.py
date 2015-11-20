@@ -31,7 +31,7 @@ class Listener(ListenerBase):
         registry.pusher.trigger(channel, action, payload)
 
 
-def load_from_config(config):
+def load_from_config(config, prefix=''):
     settings = config.get_settings()
 
     channel = settings['event_listeners.pusher.channel']

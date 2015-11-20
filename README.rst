@@ -52,4 +52,4 @@ record updates per collection:
 TODO
 ----
 
-* Add view for authenticated channels
+- Add view for authenticated channels
