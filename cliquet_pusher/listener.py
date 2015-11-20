@@ -11,6 +11,8 @@ class Listener(ListenerBase):
         self.resources = resources
 
     def __call__(self, event):
+        registry = event.request.registry
+
         resource_name = event.payload['resource_name']
         if self.resources and resource_name not in self.resources:
             return
@@ -21,8 +23,12 @@ class Listener(ListenerBase):
 
         payload = event.impacted_records
 
-        pusher = event.request.registry.pusher
-        pusher.trigger(channel, action, payload)
+        # XXX: Due to bug in Cliquet 2.11, clean-up payload
+        for change in payload:
+            if 'old' in change:
+                change['old'].pop('__permissions__', None)
+
+        registry.pusher.trigger(channel, action, payload)
 
 
 def load_from_config(config):
