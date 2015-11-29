@@ -19,6 +19,8 @@ Install
 
     pip install cliquet-pusher
 
+Depending on your environment, it might be necessary to install the `ffi system library <https://sourceware.org/libffi/>`_ with ``sudo apt-get install libffi-dev``.
+
 
 Setup
 -----
