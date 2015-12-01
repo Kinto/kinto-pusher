@@ -31,7 +31,8 @@ In the Cliquet-based application settings:
 
     cliquet.includes = cliquet_pusher
 
-    cliquet.event_listeners = cliquet_pusher.listener
+    cliquet.event_listeners = pusher
+    cliquet.event_listeners.pusher.use = cliquet_pusher.listener
     cliquet.event_listeners.pusher.resources = <list of resource names>
     cliquet.event_listeners.pusher.channel = <channel-name or pattern>
 
