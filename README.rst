@@ -4,6 +4,8 @@ Run Demo
 
 This demo uses *Kinto*, a *Cliquet*-based application.
 
+The objective of this tutorial is to run `this demo <http://leplatrem.github.io/cliquet-pusher/>`_
+using a local server.
 
 We will run *Kinto* locally with this plugin enabled, and observe live sync
 between two browsers.
@@ -55,8 +57,8 @@ For example, create an arbitrary record with `cURL <https://en.wikipedia.org/wik
 This created a record, and you should see the generated event in the dashboard.
 
 
-Run the demo
-------------
+Run the webpage
+---------------
 
 * Replace ``<Pusher key>`` by your ``key`` in the ``demo/map.js`` file
 * Run locally:
@@ -66,8 +68,7 @@ Run the demo
     cd demo/
     python -m SimpleHTTPServer 9999
 
-* Navigate to http://localhost:9999 with two browsers, create and move markers
-in order to observe live sync!
+* Navigate to http://localhost:9999 with two browsers, create and move markers in order to observe live sync!
 
 
 Going further
