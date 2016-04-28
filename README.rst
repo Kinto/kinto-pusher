@@ -8,7 +8,7 @@ Cliquet Pusher
 .. image:: https://img.shields.io/pypi/v/cliquet-pusher.svg
         :target: https://pypi.python.org/pypi/cliquet-pusher
 
-**proof-of-concept**: Plug `Cliquet notifications <http://cliquet.readthedocs.org/en/latest/reference/notifications.html>`_
+**proof-of-concept**: Plug `Cliquet notifications <http://cliquet.readthedocs.io/en/latest/reference/notifications.html>`_
 with `Pusher.com <http://pusher.com>`_.
 
 
@@ -41,7 +41,7 @@ In the Cliquet-based application settings:
     pusher.secret = <pusher-secret>
 
 
-For example, in `Kinto <http://kinto.readthedocs.org/>`_, to be notified of
+For example, in `Kinto <http://kinto.readthedocs.io/>`_, to be notified of
 record updates per collection:
 
 ::
