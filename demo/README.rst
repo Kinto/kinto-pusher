@@ -22,7 +22,7 @@ Setup a Pusher account
 Run Kinto locally
 -----------------
 
-Follow `the instructions in Kinto documentation <http://kinto.readthedocs.org>`_,
+Follow `the instructions in Kinto documentation <http://kinto.readthedocs.io>`_,
 but roughly it should be:
 
 ::
