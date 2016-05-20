@@ -1,7 +1,7 @@
 import re
 
 from pyramid.settings import aslist
-from cliquet.listeners import ListenerBase
+from kinto.core.listeners import ListenerBase
 
 
 class Listener(ListenerBase):

@@ -15,7 +15,7 @@ with open('CHANGELOG.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    'cliquet>=2.11',
+    'kinto>=3.0.0',
     'pusher'
 ]
 
@@ -24,23 +24,23 @@ test_requirements = [
 ]
 
 setup(
-    name='cliquet-pusher',
-    version='0.2.1.dev0',
-    description="Plug Cliquet notifications with Pusher.com",
+    name='kinto-pusher',
+    version='0.3.0.dev0',
+    description="Plug Kinto notifications into Pusher.com",
     long_description=readme + '\n\n' + history,
     author="Mathieu Leplatre",
     author_email='mathieu@leplat.re',
-    url='https://github.com/leplatrem/cliquet-pusher',
+    url='https://github.com/leplatrem/kinto-pusher',
     packages=[
-        'cliquet_pusher',
+        'kinto_pusher',
     ],
-    package_dir={'cliquet_pusher':
-                 'cliquet_pusher'},
+    package_dir={'kinto_pusher':
+                 'kinto_pusher'},
     include_package_data=True,
     install_requires=requirements,
     license="Apache License (2.0)",
     zip_safe=False,
-    keywords='cliquet pusher',
+    keywords='kinto pusher',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
