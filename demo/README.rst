@@ -2,9 +2,9 @@
 Run Demo
 ========
 
-This demo uses *Kinto*, a *Cliquet*-based application.
+This demo uses *Kinto*, the quintessential "Kinto-based application".
 
-The objective of this tutorial is to run `this demo <http://leplatrem.github.io/cliquet-pusher/>`_
+The objective of this tutorial is to run `this demo <http://leplatrem.github.io/kinto-pusher/>`_
 using a local server.
 
 We will run *Kinto* locally with this plugin enabled, and observe live sync
@@ -79,5 +79,5 @@ The whole live sync demo is contained in the ``setupLiveSync()`` function.
 Of course, *Kinto* (and *kinto.js*) were just an example.
 
 You can use the *Pusher* libraries and SDK in your Web/mobile applications to
-receive notifications from any *Cliquet*-based service in any kind of
+receive notifications from any *Kinto*-based service in any kind of
 platform.
