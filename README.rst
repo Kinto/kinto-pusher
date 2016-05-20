@@ -2,8 +2,8 @@
 Kinto Pusher
 ===============================
 
-.. image:: https://img.shields.io/travis/kinto/kinto-pusher.svg
-        :target: https://travis-ci.org/kinto/kinto-pusher
+.. image:: https://img.shields.io/travis/Kinto/kinto-pusher.svg
+        :target: https://travis-ci.org/Kinto/kinto-pusher
 
 .. image:: https://img.shields.io/pypi/v/kinto-pusher.svg
         :target: https://pypi.python.org/pypi/kinto-pusher
