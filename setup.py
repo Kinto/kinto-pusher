@@ -25,7 +25,7 @@ test_requirements = [
 
 setup(
     name='cliquet-pusher',
-    version='0.2.1.dev0',
+    version='0.3.0.dev0',
     description="Plug Cliquet notifications with Pusher.com",
     long_description=readme + '\n\n' + history,
     author="Mathieu Leplatre",
