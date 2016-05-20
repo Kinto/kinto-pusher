@@ -9,7 +9,7 @@ Kinto Pusher
         :target: https://pypi.python.org/pypi/kinto-pusher
 
 **proof-of-concept**: Plug `Kinto notifications <http://kinto.readthedocs.io/en/latest/core/reference/notifications.html>`_
-with `Pusher.com <http://pusher.com>`_.
+into `Pusher.com <http://pusher.com>`_.
 
 
 Install
