@@ -27,7 +27,7 @@ Setup
 
 In the Kinto-based application settings:
 
-::
+.. code-block:: ini
 
     kinto.includes = kinto_pusher
 
@@ -44,7 +44,7 @@ In the Kinto-based application settings:
 For example, in `Kinto <http://kinto.readthedocs.io/>`_, to be notified of
 record updates per collection:
 
-::
+.. code-block:: ini
 
     kinto.event_listeners.pusher.resources = record
     kinto.event_listeners.pusher.channel = {bucket_id}-{collection_id}-{resource_name}
