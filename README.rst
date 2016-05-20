@@ -29,10 +29,10 @@ In the Kinto-based application settings:
 
 ::
 
-    kinto.includes = cliquet_pusher
+    kinto.includes = kinto_pusher
 
     kinto.event_listeners = pusher
-    kinto.event_listeners.pusher.use = cliquet_pusher.listener
+    kinto.event_listeners.pusher.use = kinto_pusher.listener
     kinto.event_listeners.pusher.resources = <list of resource names>
     kinto.event_listeners.pusher.channel = <channel-name or pattern>
 
