@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.3.0 (unreleased)
+0.3.0 (2016-05-23)
 ------------------
 
 - Project renamed to *Kinto-fxa* to match the rename of ``cliquet`` to
