@@ -8,8 +8,10 @@ Kinto Pusher
 .. image:: https://img.shields.io/pypi/v/kinto-pusher.svg
         :target: https://pypi.python.org/pypi/kinto-pusher
 
-**proof-of-concept**: Plug `Kinto notifications <http://kinto.readthedocs.io/en/latest/core/reference/notifications.html>`_
+Plug `Kinto notifications <http://kinto.readthedocs.io/en/latest/core/reference/notifications.html>`_
 into `Pusher.com <http://pusher.com>`_.
+
+* `Online demo <https://kinto.github.io/kinto-pusher/>`_
 
 
 Install
