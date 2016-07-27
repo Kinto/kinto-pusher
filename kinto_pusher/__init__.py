@@ -18,7 +18,7 @@ def includeme(config):
     config.add_api_capability(
         "pusher",
         version=__version__,
-        description="Notify Pusher when somethings changes.",
+        description="Notify Pusher when something changes.",
         url="https://github.com/Kinto/kinto-pusher",
         app_id=app_id,
         key=key)
