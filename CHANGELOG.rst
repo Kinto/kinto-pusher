@@ -4,7 +4,7 @@ Changelog
 0.4.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add the plugin version in the capability.
 
 
 0.3.0 (2016-05-23)

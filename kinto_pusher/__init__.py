@@ -1,4 +1,9 @@
+import pkg_resources
+
 from pusher import Pusher
+
+#: Module version, as defined in PEP-0396.
+__version__ = pkg_resources.get_distribution(__package__).version
 
 
 def includeme(config):
@@ -9,3 +14,11 @@ def includeme(config):
     secret = settings['pusher.secret']
 
     config.registry.pusher = Pusher(app_id, key, secret)
+
+    config.add_api_capability(
+        "pusher",
+        version=__version__,
+        description="Notify Pusher when somethings changes.",
+        url="https://github.com/Kinto/kinto-pusher",
+        app_id=app_id,
+        key=key)
