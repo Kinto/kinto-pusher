@@ -1,40 +1,29 @@
 import re
 
-from pyramid.settings import aslist
 from kinto.core.listeners import ListenerBase
 
 
 class Listener(ListenerBase):
-    def __init__(self, channel, resources):
-        super(Listener, self).__init__()
+    def __init__(self, channel, *args, **kwargs):
+        super(Listener, self).__init__(*args, **kwargs)
         self.channel = channel
-        self.resources = resources
 
     def __call__(self, event):
-        registry = event.request.registry
-
-        resource_name = event.payload['resource_name']
-        if self.resources and resource_name not in self.resources:
-            return
-
         channel = self.channel.format(**event.payload)
         channel = re.sub('[^a-zA-Z0-9_\\-]', '', channel)
         action = event.payload['action']
 
         payload = event.impacted_records
 
-        # XXX: Due to bug in Cliquet 2.11, clean-up payload
-        for change in payload:
-            if 'old' in change:
-                change['old'].pop('__permissions__', None)
-
+        registry = event.request.registry
         registry.pusher.trigger(channel, action, payload)
 
 
 def load_from_config(config, prefix=''):
     settings = config.get_settings()
 
-    channel = settings['event_listeners.pusher.channel']
-    resources = aslist(settings['event_listeners.pusher.resources'])
+    # XXX: this will only work if configured listener is called `pusher`
+    channel = settings.get('event_listeners.pusher.channel',
+                           '{bucket_id}-{collection_id}-{resource_name}')
 
-    return Listener(channel, resources)
+    return Listener(channel)
