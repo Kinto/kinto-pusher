@@ -1,22 +1,4 @@
 function main() {
-  // Mozilla demo server (flushed every day)
-  var server = "https://kinto.dev.mozaws.net/v1";
-  // Simplest credentials ever.
-  var headers = {Authorization: "Basic " + btoa("public:notsecret")};
-  // Default bucket.
-  var bucket = "default";
-  // Arbitrary collection id.
-  var collection_id = "kinto_demo_leaflet";
-
-  // Pusher credentials
-  var pusher_key = '01a9feaaf9ebb120d1a6';
-
-  // Kinto client with sync options.
-  var kinto = new Kinto({bucket: bucket, remote: server, headers: headers});
-
-  // Local store in IndexedDB.
-  var store = kinto.collection(collection_id);
-
   // Initialize map centered on my hometown.
   var map = L.map('map', {
     doubleClickZoom: false,
@@ -25,35 +7,48 @@ function main() {
     zoom: 16
   });
 
-  // Group of markers.
+  // Pusher credentials
+  var pusher_key = '01a9feaaf9ebb120d1a6';
+
+  // Mozilla demo server (flushed every day)
+  var server = "https://kinto.dev.mozaws.net/v1";
+  // Simplest credentials ever.
+  var headers = {Authorization: "Basic " + btoa("token:your-own-secret")};
+
+  // The "default" bucket is handy because it does not have
+  // to be created.
+  var bucket = "default";
+  // Arbitrary collection id.
+  var collection_id = "kinto_demo_leaflet";
+  // Kinto client.
+  var kinto = new KintoClient(server, {headers: headers});
+  var client = kinto.bucket(bucket)
+                    .collection(collection_id);
+
+  // Global to associate map markers with record ids.
   var markers = {};
 
+  // Setup live sync.
+  getBucketId()
+    .then(setupLiveSync);
+
   // Load previously created records.
-  store.list()
+  client.listRecords()
     .then(function(results) {
       // Add each marker to map.
       results.data.map(addMarker);
-    })
-    .then(syncServer);
+    });
 
   // Create marker on double-click.
   map.on('dblclick', function(event) {
-    // Save in local store.
-    store.create({latlng: event.latlng})
-      .then(function (result) {
-        // Add marker to map.
-        addMarker(result.data);
-      })
-      .then(syncServer);
+    // Save on server... marker will be added to map
+    // when pusher event is received.
+    // (enough for demo, but bad for UX)
+    client.createRecord({latlng: event.latlng});
   });
 
-  // Setup live-sync!
-  getBucketId()
-   .then(setupLiveSync);
-
-
   function addMarker(record) {
-    // Create new marker.
+    // Create new map marker.
     var marker = L.marker(record.latlng, {draggable: true})
                   .addTo(map);
     // Store reference by record id.
@@ -61,17 +56,11 @@ function main() {
 
     // Listen to events on marker.
     marker.on('click', function () {
-      store.delete(record.id)
-        .then(removeMarker.bind(undefined, record))
-        .then(syncServer);
+      client.deleteRecord(record.id);
     });
     marker.on('dragend', function () {
-      store.get(record.id)
-        .then(function (result) {
-          result.latlng = marker.getLatLng();
-          return store.update(result.data);
-        })
-        .then(syncServer);
+      var updated = Object.assign({}, record, {latlng: marker.getLatLng()});
+      client.updateRecord(updated);
     });
   }
 
@@ -80,43 +69,17 @@ function main() {
     delete markers[record.id];
   }
 
-  function syncServer() {
-    var options = {strategy: Kinto.syncStrategy.CLIENT_WINS};
-    store.sync(options)
-      .then(function (result) {
-        if (result.ok) {
-          // Add markers for newly created records.
-          result.created.map(addMarker);
-          // Remove markers of deleted records.
-          result.deleted.map(removeMarker);
-        }
-      })
-      .catch(function (err) {
-        // Special treatment since the demo server is flushed.
-        if (/flushed/.test(err.message)) {
-          // Mark every local record as «new» and re-upload.
-          return store.resetSyncStatus()
-            .then(syncServer);
-        }
-        throw err;
-      });
-  }
-
   function getBucketId() {
     // When using the `default` bucket, we should resolve its real id
     // to be able to listen to notifications.
     if (bucket != "default")
       return Promise.resolve(bucket);
 
-    return fetch(server + '/buckets/' + bucket, {headers: headers})
+    return kinto.fetchServerInfo()
       .then(function (result) {
-        return result.json();
-      })
-      .then(function (result) {
-        return result.data.id;
-      });
+        return result.user.bucket;
+    });
   }
-
 
   function setupLiveSync(bucket_id) {
     var pusher = new Pusher(pusher_key, {
@@ -130,43 +93,17 @@ function main() {
     var channel = pusher.subscribe(channelName);
     channel.bind('create', function(data) {
       data.map(function (change) {
-        if (markers[change.new.id])
-          return; // Ignore our own events.
-
-        // Store as if it was synced, and add to map.
-        store.create(change.new, {synced: true})
-          .then(addMarker.bind(undefined, change.new));
+        addMarker(change.new);
       });
     });
     channel.bind('update', function(data) {
       data.map(function (change) {
-        // If local modification exists, ignore remote modification.
-        store.get(change.old.id)
-         .then(function (existing) {
-           if (existing.data._status != 'synced')
-             return;
-           // Store locally as if it was synced.
-           store.update(change.new, {synced: true})
-             .then(function (result) {
-                markers[result.data.id].setLatLng(change.new.latlng);
-             });
-         });
+        markers[change.new.id].setLatLng(change.new.latlng);
       });
     });
     channel.bind('delete', function(data) {
       data.map(function (change) {
-        if (!markers[change.old.id])
-          return; // Ignore our own events.
-
-        // If local modification exists, ignore remote deletion.
-        store.get(change.old.id)
-         .then(function (existing) {
-           if (existing.data._status != 'synced')
-             return;
-           // Delete completely from local DB.
-           store.delete(change.old.id, {virtual: false})
-             .then(removeMarker.bind(undefined, change.old));
-         });
+        removeMarker.bind(change.old);
       });
     });
   }
