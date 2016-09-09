@@ -110,11 +110,3 @@ function main() {
 }
 
 window.addEventListener("DOMContentLoaded", main);
-
-
-
-
-
-// https://jsbin.com/cebubopiye/1/edit?js,output
-// https://jsbin.com/yewipufofo/6/edit?html,js
-// https://jsbin.com/qikujegili/4/edit?html,css,js,output
