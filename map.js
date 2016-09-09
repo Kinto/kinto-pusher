@@ -2,7 +2,7 @@ function main() {
   // Initialize map centered on my hometown.
   var map = L.map('map', {
     doubleClickZoom: false,
-    layers: [L.tileLayer('https://tile.osm.org/{z}/{x}/{y}.png')],
+    layers: [L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png')],
     center: [48.49, 1.395],
     zoom: 16
   });
