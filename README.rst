@@ -33,25 +33,17 @@ In the Kinto-based application settings:
 
     kinto.includes = kinto_pusher
 
-    kinto.event_listeners = pusher
-    kinto.event_listeners.pusher.use = kinto_pusher.listener
-    kinto.event_listeners.pusher.resources = <list of resource names>
-    kinto.event_listeners.pusher.channel = <channel-name or pattern>
-
     pusher.app_id = <pusher-app-id>
     pusher.key = <pusher-key>
     pusher.secret = <pusher-secret>
 
+    kinto.event_listeners = pusher
+    kinto.event_listeners.pusher.use = kinto_pusher.listener
 
-For example, in `Kinto <http://kinto.readthedocs.io/>`_, to be notified of
-record updates per collection:
-
-.. code-block:: ini
-
-    kinto.event_listeners.pusher.resources = record
-    kinto.event_listeners.pusher.channel = {bucket_id}-{collection_id}-{resource_name}
-
-> **Note:** *This channel format is the one used in the demo*
+    # Optional customization
+    # kinto.event_listeners.pusher.channel = {bucket_id}-{collection_id}-{resource_name}
+    # kinto.event_listeners.pusher.for_actions = create update delete
+    # kinto.event_listeners.pusher.for_resources = bucket collection group record
 
 
 TODO
