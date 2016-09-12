@@ -1,4 +1,4 @@
-from kinto.tests.support import unittest
+import unittest
 from . import BaseWebTest
 
 from kinto_pusher import __version__ as pusher_version
