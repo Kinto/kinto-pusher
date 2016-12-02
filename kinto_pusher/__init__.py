@@ -12,8 +12,9 @@ def includeme(config):
     app_id = str(settings['pusher.app_id'])
     key = settings['pusher.key']
     secret = settings['pusher.secret']
+    cluster = settings.get('pusher.cluster')
 
-    config.registry.pusher = Pusher(app_id, key, secret)
+    config.registry.pusher = Pusher(app_id, key, secret, cluster=cluster)
 
     config.add_api_capability(
         "pusher",
