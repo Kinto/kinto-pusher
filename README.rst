@@ -36,6 +36,7 @@ In the Kinto-based application settings:
     pusher.app_id = <pusher-app-id>
     pusher.key = <pusher-key>
     pusher.secret = <pusher-secret>
+    pusher.cluster = eu
 
     kinto.event_listeners = pusher
     kinto.event_listeners.pusher.use = kinto_pusher.listener

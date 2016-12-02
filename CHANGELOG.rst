@@ -1,10 +1,12 @@
 Changelog
 =========
 
-0.4.0 (unreleased)
+0.4.0 (2016-12-02)
 ------------------
 
 - Add the plugin version in the capability. (#12)
+- Handle the ``pusher.cluster`` option. (#17)
+- Update to super Kinto 5.0
 
 
 0.3.0 (2016-05-23)
