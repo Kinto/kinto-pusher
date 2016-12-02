@@ -30,7 +30,7 @@ setup(
     long_description=readme + '\n\n' + history,
     author="Mathieu Leplatre",
     author_email='mathieu@leplat.re',
-    url='https://github.com/leplatrem/kinto-pusher',
+    url='https://github.com/Kinto/kinto-pusher',
     packages=[
         'kinto_pusher',
     ],
