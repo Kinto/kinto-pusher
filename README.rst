@@ -40,10 +40,9 @@ In the Kinto-based application settings:
     kinto.event_listeners = pusher
     kinto.event_listeners.pusher.use = kinto_pusher.listener
 
-    # Optional customization
-    # kinto.event_listeners.pusher.channel = {bucket_id}-{collection_id}-{resource_name}
+    kinto.event_listeners.pusher.channel = {bucket_id}-{collection_id}-{resource_name}
+    kinto.event_listeners.pusher.resources = bucket collection group record
     # kinto.event_listeners.pusher.for_actions = create update delete
-    # kinto.event_listeners.pusher.for_resources = bucket collection group record
 
 
 TODO
