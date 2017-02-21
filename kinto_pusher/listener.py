@@ -27,8 +27,8 @@ class Listener(ListenerBase):
         except ValueError:
             # In case pusher refuse to send large payload try without
             # payload.
-            registry.pusher.trigger(channel, action,
-                                    {"payload": "Too large to be send from there."})
+            payload = {"payload": "Too large to be send from there."}
+            registry.pusher.trigger(channel, action, payload)
 
 
 def load_from_config(config, prefix=''):
