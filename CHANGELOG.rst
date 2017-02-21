@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.5.0 (unreleased)
+0.5.0 (2017-02-21)
 ------------------
 
 - Fixing some common 500 with the plugin (#20)
