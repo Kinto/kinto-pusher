@@ -9,14 +9,26 @@ class Listener(ListenerBase):
         self.channel = channel
 
     def __call__(self, event):
-        channel = self.channel.format(**event.payload)
+        try:
+            channel = self.channel.format(**event.payload)
+        except KeyError:
+            # In case we cannot build the channel name with the
+            # current event just ignore it. Refs #19
+            return
+
         channel = re.sub('[^a-zA-Z0-9_\\-]', '', channel)
         action = event.payload['action']
 
         payload = event.impacted_records
 
         registry = event.request.registry
-        registry.pusher.trigger(channel, action, payload)
+        try:
+            registry.pusher.trigger(channel, action, payload)
+        except ValueError:
+            # In case pusher refuse to send large payload try without
+            # payload.
+            registry.pusher.trigger(channel, action,
+                                    {"payload": "Too large to be send from there."})
 
 
 def load_from_config(config, prefix=''):
