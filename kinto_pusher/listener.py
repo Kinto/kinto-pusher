@@ -27,7 +27,7 @@ class Listener(ListenerBase):
         except ValueError:
             # In case pusher refuse to send large payload try without
             # payload.
-            payload = {"payload": "Too large to be send from there."}
+            payload = {"payload": "Too large to be sent from there."}
             registry.pusher.trigger(channel, action, payload)
 
 

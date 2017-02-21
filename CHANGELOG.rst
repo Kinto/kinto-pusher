@@ -4,8 +4,7 @@ Changelog
 0.5.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Fixing some common 500 with the plugin (#20)
 
 0.4.0 (2016-12-02)
 ------------------
