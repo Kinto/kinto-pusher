@@ -4,7 +4,7 @@ Changelog
 0.6.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Upgrade to Kinto 6 and Python 3.5
 
 
 0.5.0 (2017-02-21)
