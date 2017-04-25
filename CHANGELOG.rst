@@ -1,10 +1,10 @@
 Changelog
 =========
 
-0.6.0 (unreleased)
+0.6.0 (2017-04-25)
 ------------------
 
-- Upgrade to Kinto 6 and Python 3.5
+- Upgrade to Kinto 6 and Python 3.5 (#21)
 
 
 0.5.0 (2017-02-21)
