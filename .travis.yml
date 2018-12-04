@@ -5,7 +5,7 @@ env:
   - TOXENV=kinto-master
   - TOXENV=flake8
 install: pip install -U tox
-script: tox
+script: tox -e $TOXENV
 matrix:
   include:
     - python: 3.7
