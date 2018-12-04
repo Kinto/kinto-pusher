@@ -1,9 +1,15 @@
 language: python
-python: 3.5
-sudo: false
+python: 3.6
 env:
-  - TOXENV=py35
-  - TOXENV=kinto-master
-  - TOXENV=flake8
+  - TOX_ENV=py36
+  - TOX_ENV=kinto-master
+  - TOX_ENV=flake8
 install: pip install -U tox
-script: tox
+script: tox -e $TOX_ENV
+matrix:
+  include:
+    - python: 3.7
+      dist: xenial
+      sudo: true
+      env:
+        - TOX_ENV=py37
