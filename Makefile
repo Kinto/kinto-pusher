@@ -14,12 +14,16 @@ virtualenv: $(PYTHON)
 $(PYTHON):
 	virtualenv $(VENV)
 
+
 tox: $(TOX)
 $(TOX): virtualenv
-	$(VENV)/bin/pip install tox
+	$(VENV)/bin/pip install -U pip tox black
 
 tests-once: tox
 	$(VENV)/bin/tox -e py27
 
 tests: tox
 	$(VENV)/bin/tox
+
+black: tox
+	$(VENV)/bin/black --exclude kinto_pusher tests setup.py
