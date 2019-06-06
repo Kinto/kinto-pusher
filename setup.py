@@ -24,7 +24,7 @@ test_requirements = [
 
 setup(
     name="kinto-pusher",
-    version="1.0.0",
+    version="1.1.0.dev0",
     description="Plug Kinto notifications into Pusher.com",
     long_description=README + "\n\n" + CHANGELOG,
     author="Mathieu Leplatre",
