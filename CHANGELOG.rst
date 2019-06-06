@@ -1,10 +1,10 @@
 Changelog
 =========
 
-0.7.0 (unreleased)
+1.0.0 (2019-06-06)
 ------------------
 
-- Nothing changed yet.
+- Upgrade to Kinto 13 and Python 3.7
 
 
 0.6.0 (2017-04-25)
