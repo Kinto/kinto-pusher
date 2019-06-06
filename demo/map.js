@@ -83,7 +83,7 @@ function main() {
 
   function setupLiveSync(bucket_id) {
     var pusher = new Pusher(pusher_key, {
-      encrypted: true
+      forceTLS: true
     });
 
     // The channel name. It should match the setting
